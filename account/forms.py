@@ -17,20 +17,20 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Юзер с таким email уже существует')
         return email
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('Юзер с таким username уже существует')
+        return username
+
     def clean(self):
         data = self.cleaned_data
         print(data)
         password = data.get('password')
-        password_confirm = data.get('password_confirmation')
+        password_confirm = data.pop('password_confirmation')
         if password != password_confirm:
             raise forms.ValidationError(' Пароли не совпадают!')
         return data
-
-    def clean_username(self):
-        username = self.cleaned_data.get('email')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError('Юзер с таким username уже существует')
-        return username
 
     def save(self, commit=True):
         user = User.objects.create_user(**self.cleaned_data)

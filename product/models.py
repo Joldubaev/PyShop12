@@ -30,8 +30,11 @@ class Product(models.Model):
                                  related_name='products')
 
     def __str__(self):
-         return self.name
+        return self.name
 
     def get_absolute_url(self):
-        from django.urls import  reverse
-        return reverse('detail',kwargs={'id': self.pk})
+        from django.urls import reverse
+        return reverse('detail', kwargs={'id': self.pk})
+
+    class Meta:
+        ordering = ['-id']
